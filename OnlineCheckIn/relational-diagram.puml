@@ -1,0 +1,111 @@
+@startuml
+' Set layout to left-to-right
+left to right direction
+
+'------------------
+' Entities
+'------------------
+entity Company {
+  * company_id : PK
+  --
+  name
+}
+
+entity Hotel {
+  * hotel_id : PK
+  --
+  name
+  address
+  company_id : FK
+}
+
+entity Floor {
+  * floor_id : PK
+  --
+  floor_number
+  hotel_id : FK
+}
+
+entity RoomType {
+  * room_type_id : PK
+  --
+  name
+  description
+  price
+  hotel_id : FK
+}
+
+entity Room {
+  * room_id : PK
+  --
+  room_number
+  floor_id : FK
+  room_type_id : FK
+}
+
+entity User {
+  * user_id : PK
+  --
+  name
+  email
+  hotel_id : FK
+}
+
+entity Customer {
+  * customer_id : PK
+  --
+  name
+  contact_info
+}
+
+
+
+
+entity Schedule {
+  * schedule_id : PK
+  --
+  planned_from_datetime
+  planned_to_datetime
+  actual_from_datetime
+  actual_to_datetime
+  schedule_type
+  room_id : FK
+  reservation_id : FK
+}
+
+entity Payment {
+  * payment_id : PK
+  --
+  amount
+  method
+  date
+  reservation_id : FK
+}
+
+entity Invoice {
+  * invoice_id : PK
+  --
+  total_amount
+  issued_date
+  reservation_id : FK
+}
+
+'------------------
+' Relationships
+'------------------
+Company      ||--o{ Hotel         : owns
+Hotel        ||--o{ Floor         : has
+Hotel        ||--o{ RoomType      : offers
+Floor        ||--o{ Room          : contains
+Room         }o--|| RoomType      : is_of
+User         }o--|| Hotel         : employed_by
+User         ||--o{ Reservation   : makes
+Customer     ||--o{ Reservation   : books
+Reservation  }o--|| RoomType      : for
+Reservation  ||--|| Schedule      : creates
+Schedule     }o--|| Room          : for
+User         }o--|| Room          : occupies
+Payment      }o--|| Reservation   : pays_for
+Invoice      }o--|| Reservation   : bills
+
+@enduml
