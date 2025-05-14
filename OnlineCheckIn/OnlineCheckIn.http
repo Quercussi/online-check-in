@@ -1,0 +1,6 @@
+@OnlineCheckIn_HostAddress = http://localhost:5125
+
+GET {{OnlineCheckIn_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
