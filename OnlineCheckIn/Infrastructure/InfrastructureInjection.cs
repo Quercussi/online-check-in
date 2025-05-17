@@ -15,6 +15,7 @@ public static class InfrastructureInjection
             "Host=localhost;Port=5432;Username=online_hotel_check_in_user;Password=online_hotel_check_in_password_dev;Database=online_hotel_check_in_db;";
 
         services.AddScoped<ICompanyRepository, CompanyRepository>();
+        services.AddScoped<IHotelRepository, HotelRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddDbContext<OnlineCheckInContext>(optionsBuilder => optionsBuilder.UseNpgsql(connectionString));
         
