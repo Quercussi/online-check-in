@@ -8,6 +8,7 @@ public static class ServiceInjection
         (this IServiceCollection services)
     {
         services.AddScoped<ICompanyService, CompanyService>();
+        services.AddScoped<IHotelService, HotelService>();
     
         return services;
     }
