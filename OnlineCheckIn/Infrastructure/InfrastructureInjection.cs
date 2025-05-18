@@ -16,6 +16,8 @@ public static class InfrastructureInjection
 
         services.AddScoped<ICompanyRepository, CompanyRepository>();
         services.AddScoped<IHotelRepository, HotelRepository>();
+        services.AddScoped<IRoomTypeRepository, RoomTypeRepository>();
+        services.AddScoped<IRoomRepository, RoomRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddDbContext<OnlineCheckInContext>(optionsBuilder => optionsBuilder.UseNpgsql(connectionString));
         

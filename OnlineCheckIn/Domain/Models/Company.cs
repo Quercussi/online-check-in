@@ -14,6 +14,5 @@ public class Company : BaseModel
     public required string Address { get; set; }
     
     [JsonIgnore]
-
     public virtual ICollection<Hotel> Hotels { get; set; } = null!;
 }
