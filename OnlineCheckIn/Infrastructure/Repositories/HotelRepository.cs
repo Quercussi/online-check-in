@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using OnlineCheckIn.Domain.Interfaces;
 using OnlineCheckIn.Domain.Models;
 using OnlineCheckIn.Infrastructure.Database;
+using OnlineCheckIn.Infrastructure.Utils;
 
 namespace OnlineCheckIn.Infrastructure.Repositories;
 
@@ -15,12 +16,7 @@ public class HotelRepository(OnlineCheckInContext onlineCheckInContext)
         string? orderBy,
         bool ascending)
     {
-        Func<IQueryable<Hotel>, IOrderedQueryable<Hotel>>? orderByFunc = 
-            !string.IsNullOrWhiteSpace(orderBy)
-                ? q => ascending
-                    ? q.OrderBy(h => EF.Property<object>(h, orderBy))
-                    : q.OrderByDescending(h => EF.Property<object>(h, orderBy))
-                : null;
+        Func<IQueryable<Hotel>, IOrderedQueryable<Hotel>>? orderByFunc = QueryUtils.CreateOrderByFunc<Hotel>(orderBy, ascending);
 
         return await GetAsync(
             filter:    h => h.CompanyId == companyId,
