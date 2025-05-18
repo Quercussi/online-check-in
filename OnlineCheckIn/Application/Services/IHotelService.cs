@@ -4,7 +4,7 @@ namespace OnlineCheckIn.Application.Services;
 
 public interface IHotelService
 {
-    Task<Hotel?> GetCompanyById(Guid id);
+    Task<Hotel?> GetHotelById(Guid id);
 
     Task<IEnumerable<Hotel>> GetHotelsByCompanyId(
         Guid companyId,

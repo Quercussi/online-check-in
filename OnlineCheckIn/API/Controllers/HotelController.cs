@@ -11,11 +11,11 @@ namespace OnlineCheckIn.API.Controllers;
 public class HotelController(IHotelService hotelService): ControllerBase
 {
     [HttpGet("{hotelId}")]
-    public async Task<IActionResult> GetCompanyById(Guid hotelId)
+    public async Task<IActionResult> GetHotelById(Guid hotelId)
     {
         var response = new BaseHttpResponse<Hotel?>();
 
-        Hotel? result = await hotelService.GetCompanyById(hotelId);
+        Hotel? result = await hotelService.GetHotelById(hotelId);
 
         if (result == null)
         {
@@ -29,7 +29,7 @@ public class HotelController(IHotelService hotelService): ControllerBase
     }
     
     [HttpPost("")]
-    public async Task<IActionResult> AddCompany([FromBody] AddHotelDTO hotelDto)
+    public async Task<IActionResult> AddHotel([FromBody] AddHotelDTO hotelDto)
     {
         var response = new BaseHttpResponse<Hotel>();
 

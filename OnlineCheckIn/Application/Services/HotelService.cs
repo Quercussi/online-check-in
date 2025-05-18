@@ -5,7 +5,7 @@ namespace OnlineCheckIn.Application.Services;
 
 public class HotelService(IUnitOfWork unitOfWork) : IHotelService
 {
-    public async Task<Hotel?> GetCompanyById(Guid id)
+    public async Task<Hotel?> GetHotelById(Guid id)
     {
         return await unitOfWork.HotelRepository.GetByIdAsync(id);
     }
