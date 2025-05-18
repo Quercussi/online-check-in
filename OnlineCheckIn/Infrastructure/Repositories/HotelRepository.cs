@@ -23,9 +23,8 @@ public class HotelRepository(OnlineCheckInContext onlineCheckInContext)
                 : null;
 
         return await GetAsync(
-            filter:    h => h.Company.Id == companyId,
+            filter:    h => h.CompanyId == companyId,
             orderBy:   orderByFunc,
-            includeProperties: "Company",
             offset:    offset,
             limit:     limit
         );
