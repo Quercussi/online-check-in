@@ -28,6 +28,4 @@ public class Hotel : BaseModel
     
     [JsonIgnore]
     public virtual ICollection<RoomType> RoomTypes { get; set; } = null!;
-    [JsonIgnore]
-    public virtual ICollection<Floor> Floors { get; set; } = null!;
 }

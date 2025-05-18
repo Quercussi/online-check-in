@@ -9,9 +9,7 @@ public class Room : BaseModel
     [MaxLength(7)]
     public required string Number { get; set; }
     
-    [ForeignKey(nameof(FloorId))]
-    public virtual Floor Floor { get; set; } = null!;
-    public virtual Guid FloorId { get; set; }
+    public virtual Int16 FloorNumber { get; set; }
     
     [ForeignKey(nameof(RoomTypeId))]
     public virtual RoomType RoomType { get; set; } = null!;
