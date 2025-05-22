@@ -12,6 +12,7 @@ public class OnlineCheckInContext(DbContextOptions<OnlineCheckInContext> options
     public DbSet<Payment> Payments { get; set; } = null!;
     public DbSet<Reservation> Reservations { get; set; } = null!;
     public DbSet<Room> Rooms { get; set; } = null!;
+    public DbSet<RoomType> RoomTypes { get; set; } = null!;
     public DbSet<Schedule> Schedules { get; set; } = null!;
     public DbSet<User> Users { get; set; } = null!;
 
