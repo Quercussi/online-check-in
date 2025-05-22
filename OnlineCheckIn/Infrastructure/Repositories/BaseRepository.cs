@@ -8,7 +8,6 @@ namespace OnlineCheckIn.Infrastructure.Repositories;
 public abstract class BaseRepository<T>(OnlineCheckInContext dbContext) : IBaseRepository<T>
     where T : class
 {
-    protected readonly OnlineCheckInContext OnlineCheckInContext = dbContext;
     protected readonly DbSet<T> DbSet = dbContext.Set<T>();
 
     public virtual async Task<IEnumerable<T>> GetAsync(
@@ -43,7 +42,7 @@ public abstract class BaseRepository<T>(OnlineCheckInContext dbContext) : IBaseR
         return await DbSet.FindAsync(id);
     }
     
-    public virtual async Task<bool> DeleteByIdAsync(string id)
+    public virtual async Task<bool> DeleteByIdAsync(Guid id)
     {
         var entity = await DbSet.FindAsync(id);
         if (entity == null) return false;
