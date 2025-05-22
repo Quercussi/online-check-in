@@ -18,6 +18,21 @@ public class CompanyRepositoryAdditionalTests
     }
 
     [Fact]
+    public async Task AddAsync_ShouldAddSingleCompany()
+    {
+        using var context = GetInMemoryContext();
+        var repo = new CompanyRepository(context);
+        var company = new Company { Id = Guid.NewGuid(), Name = "Single Corp", Address = "Single Road" };
+
+        await repo.AddAsync(company);
+        await context.SaveChangesAsync();
+
+        var saved = await context.Companies.FindAsync(company.Id);
+        Assert.NotNull(saved);
+        Assert.That(saved!, Is.EqualTo(company));
+    }
+    
+    [Fact]
     public async Task AddRangeAsync_ShouldAddMultipleCompanies()
     {
         // Arrange
@@ -64,6 +79,43 @@ public class CompanyRepositoryAdditionalTests
         Assert.That(company, Is.EqualTo(updated));
     }
 
+    [Fact]
+    public async Task GetByIdAsync_ShouldReturnCorrectCompany()
+    {
+        using var context = GetInMemoryContext();
+        var repo = new CompanyRepository(context);
+        var companies = new List<Company>
+        {
+            new Company { Id = Guid.NewGuid(), Name = "X Corp", Address = "X Road" },
+            new Company { Id = Guid.NewGuid(), Name = "Y Corp", Address = "Y Street" }
+        };
+        await context.Companies.AddRangeAsync(companies);
+        await context.SaveChangesAsync();
+
+        var fetched = await repo.GetByIdAsync(companies[0].Id);
+        Assert.NotNull(fetched);
+        Assert.That(fetched!, Is.EqualTo(companies[0]));
+    }
+    
+    [Fact]
+    public async Task GetAllAsync_ShouldReturnAllCompanies()
+    {
+        using var context = GetInMemoryContext();
+        var repo = new CompanyRepository(context);
+        var companies = new List<Company>
+        {
+            new Company { Id = Guid.NewGuid(), Name = "X Corp", Address = "X Road" },
+            new Company { Id = Guid.NewGuid(), Name = "Y Corp", Address = "Y Street" }
+        };
+        await context.Companies.AddRangeAsync(companies);
+        await context.SaveChangesAsync();
+
+        var result = await repo.GetAllAsync();
+        Assert.That(result.Count, Is.EqualTo(2));
+        Assert.Contains(companies[0], result);
+        Assert.Contains(companies[1], result);
+    }
+    
     [Fact]
     public async Task GetAsync_ShouldFilterAndOrderAndPaginate()
     {
