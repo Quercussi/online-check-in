@@ -146,6 +146,28 @@ public class HotelRepositoryTests
     }
 
     [Fact]
+    public async Task GetHotelsByCompanyIdAsync_ShouldReturnHotelsForSpecifiedCompany()
+    {
+        using var context = GetInMemoryContext();
+        var repo = new HotelRepository(context);
+        var companyId1 = Guid.NewGuid();
+        var companyId2 = Guid.NewGuid();
+        var expectedHotel1 = new Hotel { Id = Guid.NewGuid(), Name = "H1", Address = "X", PhoneNumber = "111", Email = "q", CompanyId = companyId1 };
+        var expectedHotel2 = new Hotel { Id = Guid.NewGuid(), Name = "H2", Address = "Y", PhoneNumber = "222", Email = "p", CompanyId = companyId1 };
+        var otherHotel = new Hotel { Id = Guid.NewGuid(), Name = "H3", Address = "Z", PhoneNumber = "333", Email = "s", CompanyId = companyId2 };
+
+        await context.Hotels.AddRangeAsync(expectedHotel1, expectedHotel2, otherHotel);
+        await context.SaveChangesAsync();
+
+        var result = await repo.GetHotelsByCompanyIdAsync(companyId1, 0, 10, "Email", true);
+        var list = result.ToList();
+
+        Assert.That(list.Count, Is.EqualTo(2));
+        Assert.That(list[0], Is.EqualTo(expectedHotel2));
+        Assert.That(list[1], Is.EqualTo(expectedHotel1));
+    }
+    
+    [Fact]
     public async Task DeleteByIdAsync_ShouldReturnFalseWhenNotFound()
     {
         using var context = GetInMemoryContext();

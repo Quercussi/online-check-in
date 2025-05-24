@@ -146,6 +146,30 @@ public class RoomTypeRepositoryTests
     }
 
     [Fact]
+    public async Task GetRoomTypesByHotelIdAsync_ShouldFilterAndOrder()
+    {
+        using var context = GetInMemoryContext();
+        var repo = new RoomTypeRepository(context);
+        var sharedHotelId = Guid.NewGuid();
+        var otherHotelId = Guid.NewGuid();
+        var rt1 = new RoomType { Id = Guid.NewGuid(), Name = "CType", MaxOccupancy = 2, HotelId = sharedHotelId };
+        var rt2 = new RoomType { Id = Guid.NewGuid(), Name = "AType", MaxOccupancy = 3, HotelId = sharedHotelId };
+        var rt3 = new RoomType { Id = Guid.NewGuid(), Name = "KType", MaxOccupancy = 10, HotelId = sharedHotelId };
+        var rt4 = new RoomType { Id = Guid.NewGuid(), Name = "BType", MaxOccupancy = 4, HotelId = otherHotelId };
+    
+        await context.RoomTypes.AddRangeAsync(rt1, rt2, rt3, rt4);
+        await context.SaveChangesAsync();
+    
+        var result = await repo.GetRoomTypesByHotelIdAsync(sharedHotelId, 0, 10, "Name", false);
+        var list = result.ToList();
+    
+        Assert.That(list.Count, Is.EqualTo(3));
+        Assert.That(list[0], Is.EqualTo(rt3));
+        Assert.That(list[1], Is.EqualTo(rt1));
+        Assert.That(list[2], Is.EqualTo(rt2));
+    }
+    
+    [Fact]
     public async Task DeleteByIdAsync_ShouldReturnFalseWhenNotFound()
     {
         using var context = GetInMemoryContext();

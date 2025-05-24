@@ -142,6 +142,56 @@ public class RoomRepositoryTests
     }
 
     [Fact]
+    public async Task GetRoomsByRoomTypeIdAsync_ShouldReturnMatchingRooms()
+    {
+        using var context = GetInMemoryContext();
+        var repo = new RoomRepository(context);
+        var sharedTypeId = Guid.NewGuid();
+        var otherTypeId = Guid.NewGuid();
+        var room1 = new Room { Id = Guid.NewGuid(), Number = "101", FloorNumber = 1, RoomTypeId = sharedTypeId };
+        var room2 = new Room { Id = Guid.NewGuid(), Number = "102", FloorNumber = 1, RoomTypeId = sharedTypeId };
+        var room3 = new Room { Id = Guid.NewGuid(), Number = "201", FloorNumber = 2, RoomTypeId = otherTypeId };
+    
+        await context.Rooms.AddRangeAsync(room1, room2, room3);
+        await context.SaveChangesAsync();
+    
+        var result = await repo.GetRoomsByRoomTypeIdAsync(sharedTypeId, 0, 10, "Number", true);
+        var list = result.ToList();
+    
+        Assert.That(list.Count, Is.EqualTo(2));
+        Assert.That(list[0], Is.EqualTo(room1));
+        Assert.That(list[1], Is.EqualTo(room2));
+    }
+    
+    [Fact]
+    public async Task GetRoomsByHotelIdAsync_ShouldReturnMatchingRooms()
+    {
+        using var context = GetInMemoryContext();
+        var repo = new RoomRepository(context);
+        var sharedHotelId = Guid.NewGuid();
+        var otherHotelId = Guid.NewGuid();
+        var rt1Shared = new RoomType { Id = Guid.NewGuid(), HotelId = sharedHotelId, Name = "SharedType1" };
+        var rt2Shared = new RoomType { Id = Guid.NewGuid(), HotelId = sharedHotelId, Name = "SharedType2" };
+        var rtOther = new RoomType { Id = Guid.NewGuid(), HotelId = otherHotelId, Name = "OtherType" };
+        var room1 = new Room { Id = Guid.NewGuid(), Number = "301", FloorNumber = 3, RoomType = rt1Shared };
+        var room2 = new Room { Id = Guid.NewGuid(), Number = "302", FloorNumber = 3, RoomType = rt1Shared };
+        var room3 = new Room { Id = Guid.NewGuid(), Number = "202", FloorNumber = 3, RoomType = rt2Shared };
+        var room4 = new Room { Id = Guid.NewGuid(), Number = "401", FloorNumber = 4, RoomType = rtOther };
+    
+        await context.RoomTypes.AddRangeAsync(rt1Shared, rtOther);
+        await context.Rooms.AddRangeAsync(room1, room2, room3, room4);
+        await context.SaveChangesAsync();
+    
+        var result = await repo.GetRoomsByHotelIdAsync(sharedHotelId, 0, 10, "Number", false);
+        var list = result.ToList();
+    
+        Assert.That(list.Count, Is.EqualTo(3));
+        Assert.That(list[0], Is.EqualTo(room2));
+        Assert.That(list[1], Is.EqualTo(room1));
+        Assert.That(list[2], Is.EqualTo(room3));
+    }
+    
+    [Fact]
     public async Task DeleteByIdAsync_ShouldReturnFalseWhenNotFound()
     {
         using var context = GetInMemoryContext();
