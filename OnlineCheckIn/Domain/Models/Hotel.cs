@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace OnlineCheckIn.Domain.Models;
 
@@ -20,9 +21,11 @@ public class Hotel : BaseModel
     public required string Email { get; set; }
     
     [ForeignKey(nameof(CompanyId))]
+    [JsonIgnore]
     public virtual Company Company { get; set; } = null!;
+    
     public Guid CompanyId { get; set; }
     
+    [JsonIgnore]
     public virtual ICollection<RoomType> RoomTypes { get; set; } = null!;
-    public virtual ICollection<Floor> Floors { get; set; } = null!;
 }
